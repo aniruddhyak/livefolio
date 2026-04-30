@@ -1,0 +1,30 @@
+{
+  "last_updated": "2026-04-29",
+  "currency": "USD",
+  "price_as_of": "2026-04-29 16:00 ET (regular session close)",
+  "cash": 283.63,
+  "holdings": [
+    { "ticker": "UUUU",  "company": "Energy Fuels Inc.",                  "quantity": 2.720265, "avgCost": 22.44,  "buyDate": "2024-01-01" },
+    { "ticker": "ORCL",  "company": "Oracle Corporation",                 "quantity": 0.34102,  "avgCost": 147.12, "buyDate": "2024-01-01" },
+    { "ticker": "VZ",    "company": "Verizon Communications Inc.",        "quantity": 1,        "avgCost": 47.92,  "buyDate": "2024-01-01" },
+    { "ticker": "SLNO",  "company": "Soleno Therapeutics Inc.",           "quantity": 3.507621, "avgCost": 41.61,  "buyDate": "2024-01-01" },
+    { "ticker": "HROW",  "company": "Harrow Inc.",                        "quantity": 2.546448, "avgCost": 43.71,  "buyDate": "2024-01-01" },
+    { "ticker": "PGEN",  "company": "Precigen Inc.",                      "quantity": 8,        "avgCost": 1.80,   "buyDate": "2024-01-01" },
+    { "ticker": "QCOM",  "company": "QUALCOMM Incorporated",              "quantity": 2.023911, "avgCost": 156.45, "buyDate": "2024-01-01" },
+    { "ticker": "KDP",   "company": "Keurig Dr Pepper Inc.",              "quantity": 5.131695, "avgCost": 28.99,  "buyDate": "2024-01-01" },
+    { "ticker": "PANW",  "company": "Palo Alto Networks Inc.",            "quantity": 1,        "avgCost": 165.50, "buyDate": "2024-01-01" },
+    { "ticker": "AMZN",  "company": "Amazon.com Inc.",                    "quantity": 1,        "avgCost": 197.00, "buyDate": "2024-01-01" },
+    { "ticker": "JNJ",   "company": "Johnson & Johnson",                  "quantity": 1.019326, "avgCost": 156.90, "buyDate": "2024-01-01" },
+    { "ticker": "V",     "company": "Visa Inc.",                          "quantity": 1.004156, "avgCost": 349.89, "buyDate": "2024-01-01" },
+    { "ticker": "AAPL",  "company": "Apple Inc.",                         "quantity": 2.006147, "avgCost": 204.05, "buyDate": "2024-01-01" },
+    { "ticker": "MCD",   "company": "McDonald's Corporation",             "quantity": 1.017526, "avgCost": 288.96, "buyDate": "2024-01-01" },
+    { "ticker": "VTI",   "company": "Vanguard Total Stock Market ETF",    "quantity": 1.015327, "avgCost": 278.52, "buyDate": "2024-01-01" },
+    { "ticker": "MRK",   "company": "Merck & Co. Inc.",                   "quantity": 2.076788, "avgCost": 92.66,  "buyDate": "2024-01-01" },
+    { "ticker": "KO",    "company": "The Coca-Cola Company",              "quantity": 1.925662, "avgCost": 64.32,  "buyDate": "2024-01-01" },
+    { "ticker": "PEP",   "company": "PepsiCo Inc.",                       "quantity": 2.109961, "avgCost": 154.45, "buyDate": "2024-01-01" },
+    { "ticker": "GLD",   "company": "SPDR Gold Shares",                   "quantity": 1,        "avgCost": 243.55, "buyDate": "2024-01-01" },
+    { "ticker": "MSFT",  "company": "Microsoft Corporation",              "quantity": 1.508689, "avgCost": 405.41, "buyDate": "2024-01-01" },
+    { "ticker": "GOOGL", "company": "Alphabet Inc. (Class A)",            "quantity": 1.004663, "avgCost": 170.25, "buyDate": "2024-01-01" },
+    { "ticker": "CEG",   "company": "Constellation Energy Corporation",   "quantity": 1,        "avgCost": 311.00, "buyDate": "2024-01-01" }
+  ]
+}

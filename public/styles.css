@@ -1,0 +1,278 @@
+/* ============================================================
+   Portfolio Dashboard - styles.css
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  padding: 24px;
+  background: #f3f4f6;
+  color: #111827;
+  line-height: 1.5;
+}
+
+/* ----- Header ----- */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 12px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.as-of {
+  margin: 0;
+  font-size: 13px;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ----- Connection badge ----- */
+.conn-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.conn-live         { background: #d1fae5; color: #065f46; }
+.conn-pending      { background: #fef3c7; color: #78350f; }
+.conn-disconnected { background: #fee2e2; color: #991b1b; }
+
+/* ----- Icon button (refresh) ----- */
+.btn-icon {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.3s ease;
+}
+.btn-icon:hover  { background: #f3f4f6; }
+.btn-icon:active { transform: rotate(180deg); }
+
+/* ----- Status line (inline) ----- */
+.status {
+  font-size: 12px;
+  margin: 0;
+  color: #6b7280;
+  font-weight: 500;
+}
+.status.ok  { color: #059669; }
+.status.err { color: #dc2626; }
+
+/* ============================================================
+   CASH CARD — horizontal layout
+   ============================================================ */
+.cash-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border: 1px solid #a7f3d0;
+  border-radius: 12px;
+  padding: 18px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.cash-card h3 {
+  margin: 0;
+  font-size: 15px;
+  color: #065f46;
+}
+
+.cash-sub {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #047857;
+}
+
+.cash-amount {
+  font-size: 28px;
+  font-weight: 700;
+  color: #064e3b;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   SUMMARY CARDS
+   ============================================================ */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.card.highlight {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border-color: #93c5fd;
+}
+
+.card h3 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card p {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   HOLDINGS TABLE
+   ============================================================ */
+.holdings {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  border: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.holdings h2 {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+#holdingsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+#holdingsTable thead th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+  white-space: nowrap;
+  user-select: none;
+}
+
+#holdingsTable thead th:hover {
+  background: #f3f4f6;
+}
+
+#holdingsTable thead th.num,
+#holdingsTable tbody td.num {
+  text-align: right;
+}
+
+#holdingsTable tbody td {
+  padding: 11px 12px;
+  border-bottom: 1px solid #f3f4f6;
+  white-space: nowrap;
+}
+
+#holdingsTable tbody tr:hover {
+  background: #f9fafb;
+}
+
+#holdingsTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ----- Color helpers ----- */
+.pos { color: #059669; font-weight: 600; }
+.neg { color: #dc2626; font-weight: 600; }
+.muted { color: #9ca3af; }
+.stale-badge { color: #d97706; font-size: 11px; margin-left: 4px; }
+
+/* ----- Footer ----- */
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+footer code {
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+footer a { color: #2563eb; text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* ----- Responsive ----- */
+@media (max-width: 640px) {
+  body { padding: 12px; }
+  header h1 { font-size: 22px; }
+  .cash-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .cash-amount { font-size: 24px; }
+  .card p { font-size: 18px; }
+}
+
+.disclaimer-note {
+  font-size: 11px;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #fde68a;
+  display: inline-block;
+  margin-top: 8px;
+}

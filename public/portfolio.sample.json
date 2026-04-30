@@ -1,0 +1,18 @@
+{
+  "last_updated": "2026-04-29",
+  "currency": "USD",
+  "price_as_of": "2026-04-29 16:00 ET",
+  "cash": {
+    "available": 1000.00,
+    "note": "Sample cash balance"
+  },
+  "holdings": [
+    { "ticker": "AAPL",  "company": "Apple Inc.",                         "quantity": 5,  "avgCost": 180.00, "buyDate": "2024-01-01" },
+    { "ticker": "MSFT",  "company": "Microsoft Corporation",              "quantity": 3,  "avgCost": 320.00, "buyDate": "2024-01-01" },
+    { "ticker": "GOOGL", "company": "Alphabet Inc. (Class A)",            "quantity": 4,  "avgCost": 150.00, "buyDate": "2024-01-01" },
+    { "ticker": "JNJ",   "company": "Johnson & Johnson",                  "quantity": 6,  "avgCost": 160.00, "buyDate": "2024-01-01" },
+    { "ticker": "KO",    "company": "The Coca-Cola Company",              "quantity": 10, "avgCost": 60.00,  "buyDate": "2024-01-01" },
+    { "ticker": "VTI",   "company": "Vanguard Total Stock Market ETF",    "quantity": 2,  "avgCost": 280.00, "buyDate": "2024-01-01" },
+    { "ticker": "GLD",   "company": "SPDR Gold Shares",                   "quantity": 1,  "avgCost": 250.00, "buyDate": "2024-01-01" }
+  ]
+}

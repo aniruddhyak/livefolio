@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Portfolio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>📊 My Portfolio</h1>
+    <p class="as-of">
+      <span id="connBadge" class="conn-badge conn-pending">⚪ Connecting…</span>
+      Last update: <span id="asOfDate">—</span>
+      <button id="refreshBtn" class="btn-icon" title="Refresh now" aria-label="Refresh">🔄</button>
+      <span id="statusMsg" class="status"></span>
+    </p>
+  </header>
+
+  <!-- Cash Section -->
+  <section class="cash-card">
+    <div>
+      <h3>💵 Available Cash</h3>
+      <p class="cash-sub">Not invested · ready to deploy</p>
+    </div>
+    <div class="cash-amount" id="cashAmount">$0.00</div>
+  </section>
+
+  <!-- Summary Cards -->
+  <section class="summary">
+    <div class="card">
+      <h3>Total Invested</h3>
+      <p id="totalInvested">$0.00</p>
+    </div>
+    <div class="card">
+      <h3>Current Value</h3>
+      <p id="currentValue">$0.00</p>
+    </div>
+    <div class="card">
+      <h3>Total P/L</h3>
+      <p id="totalPL">$0.00</p>
+    </div>
+    <div class="card">
+      <h3>Total Return %</h3>
+      <p id="totalReturn">0.00%</p>
+    </div>
+    <div class="card highlight">
+      <h3>Net Worth</h3>
+      <p id="netWorth">$0.00</p>
+    </div>
+  </section>
+
+  <!-- Holdings Table -->
+  <section class="holdings">
+    <h2>Holdings</h2>
+    <div class="table-wrap">
+      <table id="holdingsTable">
+        <thead>
+          <tr>
+            <th data-key="ticker">Ticker ⇅</th>
+            <th data-key="company">Company ⇅</th>
+            <th data-key="quantity" class="num">Qty ⇅</th>
+            <th data-key="avgCost" class="num">Avg Cost ⇅</th>
+            <th data-key="currentPrice" class="num">Current Price ⇅</th>
+            <th data-key="dayChangePct" class="num">Day % ⇅</th>
+            <th data-key="invested" class="num">Invested ⇅</th>
+            <th data-key="value" class="num">Value ⇅</th>
+            <th data-key="pl" class="num">P/L ($) ⇅</th>
+            <th data-key="plPct" class="num">P/L (%) ⇅</th>
+            <th data-key="buyDate">Buy Date ⇅</th>
+          </tr>
+        </thead>
+        <tbody id="holdingsBody"></tbody>
+      </table>
+    </div>
+  </section>
+  <footer>
+    <p>
+        Local research dashboard · Live quotes via
+        https://finnhub.io ·
+        Edit <code>portfolio.json</code> to update holdings.
+    </p>
+    <p class="disclaimer-note">
+        ⚠️ <strong>Not financial advice.</strong> For personal research only.
+        Verify all data with your broker before acting.
+    </p>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
