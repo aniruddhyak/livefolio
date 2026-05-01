@@ -6,50 +6,97 @@ A self-hosted, real-time portfolio tracker with live stock quotes pushed via Ser
 
 ## ✨ Features
 
-- 📈 **Live prices** via [Finnhub](https://finnhub.io) — pushed to browser in real time (no polling)
+### Dashboard
+- 📈 **Live prices** via [Finnhub](https://finnhub.io) — pushed via Server-Sent Events (SSE)
 - 💵 **Cash + holdings tracking** with auto-computed P/L, returns, and net worth
 - 📊 **Sortable holdings table** — click any column header
+- 🔗 **Clickable tickers** — drill into per-ticker detail pages
 - 📅 **90-day rolling history** — daily snapshots saved automatically
-- 🔌 **Auto-reconnect** when network drops or server restarts
+- 🟢 **Smart market-aware refresh** — adapts to NYSE hours, weekends, holidays
+- ⚡ **Cached prices on load** — instant first paint, no waiting
+
+### Ticker Detail Pages
+- 🏢 **Company profile** — logo, exchange, industry, IPO date, market cap (cached weekly)
+- 💼 **Position summary** — quantity, P/L, days held, % of portfolio
+- 📊 **Live quote** — open / high / low / prev close + intraday range bar
+- 📈 **Price history chart** — 7d / 30d / 90d, with buy-date marker + interactive tooltips
+- 🎯 **Analyst recommendations** — Strong Buy / Buy / Hold / Sell breakdown + 4-month trend sparkline
+- 📊 **Key metrics** — 52w H/L, 52w change %, P/E, EPS, dividend yield (refreshed daily)
+- 📰 **Recent news** — last 7 days of headlines (1-hour cache)
+- 🔒 **Price targets placeholder** — ready to display when premium upgrade is enabled
+
+### Architecture
+- 🔒 **Secure** — API key never exposed to the browser
 - 👥 **Multi-tab/device sync** — all open tabs update simultaneously
 - ⚠️ **Stale data handling** — keeps last known prices if Finnhub fails
-- 🔒 **Secure** — API key never exposed to the browser
+- 🔌 **Auto-reconnect** when network drops or server restarts
 
 ## 🏗️ Architecture
 
 ```
-┌──────────────────┐         ┌──────────────────┐         ┌────────────┐
-│  fetcher.js      │ ──API──▶│  prices.json     │ ◀──read─│  Browser   │
-│  (Node.js)       │  write  │  history.json    │         │  (app.js)  │
-└──────────────────┘         └──────────────────┘         └────────────┘
-   every 60s                  local files                  SSE push
+                      ┌──────────────────┐
+                      │  Finnhub API     │
+                      └────────┬─────────┘
+                               │
+              ┌────────────────┼────────────────┐
+              │                │                │
+    ┌─────────▼─────┐  ┌──────▼─────┐  ┌──────▼──────┐
+    │  fetcher.js   │  │ profiles.js│  │financials.js│
+    │  (every 60s)  │  │  (weekly)  │  │   (daily)   │
+    └─────────┬─────┘  └──────┬─────┘  └──────┬──────┘
+              │                │                │
+              ▼                ▼                ▼
+    ┌─────────────────────────────────────────────────┐
+    │   prices.json   profiles.json  financials.json  │
+    │   history.json  news.json (lazy, 1h TTL)        │
+    └────────────────────────┬────────────────────────┘
+                             │ SSE push + REST
+                             ▼
+              ┌──────────────────────────────┐
+              │     Browser (app.js +        │
+              │      ticker.js + Chart.js)   │
+              └──────────────────────────────┘
 ```
 
-- **Server** fetches Finnhub every 60s → writes JSON files → pushes update via SSE
-- **Browser** subscribes to `/events` (SSE) → renders updates instantly
-- **Source of truth**: `portfolio.json` (you edit), `prices.json` + `history.json` (auto-generated)
+- **Server**: Node.js scheduler with market-hour awareness (regular / pre-market / after-hours / closed)
+- **Caching**: 4 JSON files refreshed at different intervals to stay within Finnhub's 60 calls/min free tier
+- **Push**: Server broadcasts price updates via SSE — no browser polling
+- **Routing**: Two pages — `/` (dashboard) and `/ticker.html?symbol=X` (per-ticker detail)
 
 ## 📁 Project Structure
 
 ```
-portfolio/
+livefolio/
 ├── .env                       # 🔒 your secrets (gitignored)
 ├── .env.sample                # ✅ committed template
 ├── .gitignore
 ├── package.json
 ├── server.js                  # Express + SSE + scheduler
 ├── README.md
+├── LICENSE
+├── DISCLAIMER.md
 │
 ├── server/
-│   └── fetcher.js             # Finnhub fetcher (writes JSONs)
+│   ├── fetcher.js             # Finnhub price fetcher (every 60s adaptive)
+│   ├── scheduler.js           # Market-aware adaptive scheduler
+│   ├── holidays.js            # NYSE holiday calendar
+│   ├── profiles.js            # Company profile fetcher (weekly)
+│   ├── financials.js          # Metrics + recommendations (daily)
+│   └── news.js                # On-demand news with 1h cache
 │
 └── public/                    # served as static files
-    ├── index.html
-    ├── app.js                 # browser app (SSE consumer)
-    ├── styles.css
-    ├── portfolio.json         # ✏️ you maintain (committed)
-    ├── prices.json            # 🤖 auto-generated (gitignored)
-    └── history.json           # 🤖 auto-generated (gitignored)
+├── index.html             # main dashboard
+├── ticker.html            # per-ticker detail page
+├── app.js                 # dashboard logic
+├── ticker.js              # detail page logic
+├── styles.css             # main styles
+├── ticker-styles.css      # detail page styles
+├── portfolio.json         # ✏️ you maintain (committed)
+├── prices.json            # 🤖 auto-generated (gitignored)
+├── history.json           # 🤖 auto-generated (gitignored)
+├── profiles.json          # 🤖 auto-generated (gitignored)
+├── financials.json        # 🤖 auto-generated (gitignored)
+└── news.json              # 🤖 auto-generated (gitignored)
 ```
 
 ## 🚀 Quick Start
@@ -119,10 +166,22 @@ Open [http://localhost:3000](http://localhost:3000) — done! 🎉
 
 ## 🛠️ Available Scripts
 
-| Command | What it does |
-|---------|--------------|
-| `npm start` | Start the server (auto-fetches every 60s + serves the UI) |
-| `npm run fetch` | One-time manual fetch (writes `prices.json` + `history.json` and exits) |
+## 🌐 API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Dashboard UI |
+| `/ticker.html?symbol=X` | GET | Per-ticker detail page |
+| `/portfolio.json` | GET | Your holdings (read-only) |
+| `/prices.json` | GET | Latest prices snapshot |
+| `/history.json` | GET | Daily history (90 days) |
+| `/profiles.json` | GET | Company profiles |
+| `/financials.json` | GET | Metrics + analyst recommendations |
+| `/api/news/:ticker` | GET | News for ticker (1-hour cache, `?force=true` to bypass) |
+| `/events` | GET | SSE stream of price updates + market phase events |
+| `/api/refresh` | POST | Trigger immediate price fetch |
+| `/api/refresh-profiles` | POST | Trigger profile refresh (`?force=true`) |
+| `/api/refresh-financials` | POST | Trigger financials refresh (`?force=true`) |
 
 ## ⚙️ Configuration
 
@@ -164,14 +223,22 @@ All settings are controlled via `.env`:
 
 ## 🌐 API Endpoints
 
+## 🌐 API Endpoints
+
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/` | GET | Dashboard UI |
+| `/ticker.html?symbol=X` | GET | Per-ticker detail page |
 | `/portfolio.json` | GET | Your holdings (read-only) |
 | `/prices.json` | GET | Latest prices snapshot |
 | `/history.json` | GET | Daily history (90 days) |
-| `/events` | GET | SSE stream of price updates |
-| `/api/refresh` | POST | Trigger immediate Finnhub fetch |
+| `/profiles.json` | GET | Company profiles |
+| `/financials.json` | GET | Metrics + analyst recommendations |
+| `/api/news/:ticker` | GET | News for ticker (1-hour cache, `?force=true` to bypass) |
+| `/events` | GET | SSE stream of price updates + market phase events |
+| `/api/refresh` | POST | Trigger immediate price fetch |
+| `/api/refresh-profiles` | POST | Trigger profile refresh (`?force=true`) |
+| `/api/refresh-financials` | POST | Trigger financials refresh (`?force=true`) |
 
 ## 🐛 Troubleshooting
 

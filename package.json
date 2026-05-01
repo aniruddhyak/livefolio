@@ -4,9 +4,14 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "fetch": "node server/fetcher.js",
-    "start": "node server.js"
-  },
+  "start": "node server.js",
+  "fetch": "node server/fetcher.js",
+  "fetch-profiles": "node server/profiles.js",
+  "fetch-profiles-force": "node server/profiles.js --force",
+  "fetch-financials": "node server/financials.js",
+  "fetch-financials-force": "node server/financials.js --force",
+  "fetch-news": "node server/news.js"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

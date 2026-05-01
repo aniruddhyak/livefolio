@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading… · Livefolio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'23 9 Q28 18 26 25 Q24 30 16 30 Q8 30 6 25 Q4 18 9 9 Z' fill='%23047857'/><text x='16' y='24' text-anchor='middle' font-size='14' font-weight='900' fill='%23fff' font-family='Arial'>$</text></svg>" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="ticker-styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- ===== Top nav ===== -->
+  <nav class="ticker-nav">
+    <a href="index.html" class="back-link">← Back to Portfolio</a>
+    <span id="connBadge" class="conn-badge conn-pending">⚪ Connecting…</span>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <section id="hero" class="ticker-hero">
+    <div class="hero-left">
+      <div id="logoWrap" class="logo-wrap">
+        <div id="logoFallback" class="logo-fallback">—</div>
+      </div>
+      <div class="hero-info">
+        <h1 id="tickerSymbol">—</h1>
+        <p id="tickerCompany" class="hero-company">Loading…</p>
+        <p id="tickerExchange" class="hero-exchange muted"></p>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div id="heroPrice" class="hero-price">$—</div>
+      <div id="heroChange" class="hero-change muted">—</div>
+      <div id="heroUpdated" class="hero-updated muted">—</div>
+    </div>
+  </section>
+
+  <!-- ===== Section 1: Your Position ===== -->
+  <section class="ticker-section">
+    <h2 class="section-title">💼 Your Position</h2>
+    <div class="position-grid">
+      <div class="stat"><span class="stat-label">Quantity</span><strong id="posQty">—</strong></div>
+      <div class="stat"><span class="stat-label">Avg Cost</span><strong id="posAvg">—</strong></div>
+      <div class="stat"><span class="stat-label">Buy Date</span><strong id="posBuyDate">—</strong></div>
+      <div class="stat"><span class="stat-label">Days Held</span><strong id="posDaysHeld">—</strong></div>
+      <div class="stat"><span class="stat-label">Total Invested</span><strong id="posInvested">—</strong></div>
+      <div class="stat"><span class="stat-label">Current Value</span><strong id="posValue">—</strong></div>
+      <div class="stat"><span class="stat-label">Total P/L</span><strong id="posPL">—</strong></div>
+      <div class="stat"><span class="stat-label">Return %</span><strong id="posReturnPct">—</strong></div>
+      <div class="stat"><span class="stat-label">Today's $ Change</span><strong id="posDayChange">—</strong></div>
+      <div class="stat"><span class="stat-label">% of Portfolio</span><strong id="posPctOfPortfolio">—</strong></div>
+    </div>
+  </section>
+
+  <!-- ===== Section 2: Today's Quote ===== -->
+  <section class="ticker-section">
+    <h2 class="section-title">📊 Today's Quote</h2>
+    <div class="quote-grid">
+      <div class="stat"><span class="stat-label">Open</span><strong id="qOpen">—</strong></div>
+      <div class="stat"><span class="stat-label">High</span><strong id="qHigh">—</strong></div>
+      <div class="stat"><span class="stat-label">Low</span><strong id="qLow">—</strong></div>
+      <div class="stat"><span class="stat-label">Prev Close</span><strong id="qPrevClose">—</strong></div>
+      <div class="stat"><span class="stat-label">Day Change</span><strong id="qDayChange">—</strong></div>
+      <div class="stat"><span class="stat-label">Day Change %</span><strong id="qDayChangePct">—</strong></div>
+    </div>
+
+    <!-- Intraday range bar -->
+    <div class="range-bar-wrap">
+      <div class="range-bar-header">
+        <span class="muted">Intraday Range</span>
+        <span class="muted">Position of current price between today's low and high</span>
+      </div>
+      <div class="range-bar">
+        <span id="rangeBarLowLabel" class="range-label-left">—</span>
+        <div class="range-track">
+          <div id="rangeBarFill" class="range-fill" style="width: 0%"></div>
+          <div id="rangeBarMarker" class="range-marker" style="left: 0%"></div>
+        </div>
+        <span id="rangeBarHighLabel" class="range-label-right">—</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Section 7: Key Metrics ===== -->
+  <section class="ticker-section">
+    <h2 class="section-title">📊 Key Metrics</h2>
+    <div class="metrics-grid">
+      <div class="metric"><span class="metric-label">52-Week High</span><strong id="m52High">—</strong><span id="m52HighDate" class="muted small"></span></div>
+      <div class="metric"><span class="metric-label">52-Week Low</span><strong id="m52Low">—</strong><span id="m52LowDate" class="muted small"></span></div>
+      <div class="metric"><span class="metric-label">52-Week Change</span><strong id="m52Change">—</strong></div>
+      <div class="metric"><span class="metric-label">P/E (TTM)</span><strong id="mPE">—</strong></div>
+      <div class="metric"><span class="metric-label">EPS (TTM)</span><strong id="mEPS">—</strong></div>
+      <div class="metric"><span class="metric-label">Dividend Yield</span><strong id="mDivYield">—</strong></div>
+    </div>
+  </section>
+
+  <!-- ===== Section 3: Price History ===== -->
+  <section class="ticker-section">
+    <div class="section-header">
+      <h2 class="section-title">📈 Price History</h2>
+      <div class="range-controls">
+        <button class="range-btn" data-range="7">7d</button>
+        <button class="range-btn active" data-range="30">30d</button>
+        <button class="range-btn" data-range="90">90d</button>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="priceChart"></canvas>
+    </div>
+    <p id="chartEmptyMsg" class="muted chart-empty" hidden>
+      📭 No history yet — chart will populate as snapshots are saved daily.
+    </p>
+  </section>
+
+  <!-- ===== Section 6: Analyst View ===== -->
+  <section class="ticker-section">
+    <h2 class="section-title">🎯 Analyst View</h2>
+
+    <div id="analystEmpty" class="muted" hidden>
+      No analyst coverage available for this ticker.
+    </div>
+
+    <div id="analystContent" class="analyst-grid" hidden>
+      <!-- Recommendation breakdown -->
+      <div class="analyst-block">
+        <div class="block-header">
+          <span class="block-title">Recommendation Breakdown</span>
+          <span id="analystPeriod" class="muted block-meta">—</span>
+        </div>
+        <div class="rec-bar-wrap">
+          <div class="rec-bar">
+            <div id="recStrongBuy" class="rec-seg seg-strong-buy" style="width:0%" title="Strong Buy"></div>
+            <div id="recBuy" class="rec-seg seg-buy" style="width:0%" title="Buy"></div>
+            <div id="recHold" class="rec-seg seg-hold" style="width:0%" title="Hold"></div>
+            <div id="recSell" class="rec-seg seg-sell" style="width:0%" title="Sell"></div>
+            <div id="recStrongSell" class="rec-seg seg-strong-sell" style="width:0%" title="Strong Sell"></div>
+          </div>
+          <div class="rec-legend">
+            <span class="legend-item"><i class="seg-strong-buy"></i> Strong Buy <b id="cntStrongBuy">0</b></span>
+            <span class="legend-item"><i class="seg-buy"></i> Buy <b id="cntBuy">0</b></span>
+            <span class="legend-item"><i class="seg-hold"></i> Hold <b id="cntHold">0</b></span>
+            <span class="legend-item"><i class="seg-sell"></i> Sell <b id="cntSell">0</b></span>
+            <span class="legend-item"><i class="seg-strong-sell"></i> Strong Sell <b id="cntStrongSell">0</b></span>
+          </div>
+          <p class="rec-total muted">Total analysts: <strong id="recTotal">0</strong></p>
+        </div>
+      </div>
+
+      <!-- Trend sparkline -->
+      <div class="analyst-block">
+        <div class="block-header">
+          <span class="block-title">4-Month Trend</span>
+        </div>
+        <div class="sparkline-wrap">
+          <canvas id="recSparkline"></canvas>
+        </div>
+      </div>
+
+      <!-- Price target (premium placeholder) -->
+      <div class="analyst-block analyst-target">
+        <div class="block-header">
+          <span class="block-title">Price Target</span>
+        </div>
+        <div id="targetContent" class="target-content">
+          <div class="target-placeholder">
+            <span class="lock">🔒</span>
+            <p>Premium feature</p>
+            <p class="muted small">Analyst price targets will display here when available.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Section 5: News ===== -->
+  <section class="ticker-section">
+    <div class="section-header">
+      <h2 class="section-title">📰 Recent News</h2>
+      <span id="newsMeta" class="muted">—</span>
+    </div>
+    <ul id="newsList" class="news-list">
+      <li class="news-empty muted">Loading headlines…</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>
+      Local research dashboard · Live quotes via
+      <a href="https://finnhub.io" target="_blank" rel="noopener">Finnhub</a> ·
+      <a href="DISCLAIMER.md" target="_blank">⚠️ Not financial advice</a>
+    </p>
+  </footer>
+
+  <script src="ticker.js"></script>
+</body>
+</html>

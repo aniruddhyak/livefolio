@@ -20,18 +20,36 @@ async function loadPortfolio() {
   if (!r.ok) throw new Error('portfolio.json not found');
   const data = await r.json();
   CASH = Number(data.cash || 0);
-  HOLDINGS = (data.holdings || []).map(h => ({
-    ticker: (h.ticker || '').toUpperCase(),
-    company: h.company || '',
-    quantity: Number(h.quantity) || 0,
-    avgCost: Number(h.avgCost) || 0,
-    buyDate: h.buyDate || '',
-    currentPrice: 0,
-    dayChangePct: 0,
-    invested: 0, value: 0, pl: 0, plPct: 0,
-    loaded: false,
-    isStale: false
-  }));
+  HOLDINGS = (data.holdings || []).map(h => {
+    const quantity = Number(h.quantity) || 0;
+    const avgCost = Number(h.avgCost) || 0;
+    return {
+      ticker: (h.ticker || '').toUpperCase(),
+      company: h.company || '',
+      quantity,
+      avgCost,
+      buyDate: h.buyDate || '',
+      currentPrice: 0,
+      dayChangePct: 0,
+      invested: quantity * avgCost,   // 🆕 compute now
+      value: 0,
+      pl: 0,
+      plPct: 0,
+      loaded: false,
+      isStale: false
+    };
+  });
+}
+
+async function loadInitialPrices() {
+  try {
+    const r = await fetch('prices.json?_=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) return;
+    const data = await r.json();
+    applyPrices(data);
+  } catch (e) {
+    console.warn('Could not load prices.json on boot:', e.message);
+  }
 }
 
 // --- apply prices payload from SSE ---
@@ -70,29 +88,43 @@ function recompute(h) {
 }
 
 // --- SSE connection ---
+let connectionPhase = null;
+
 function connectSSE() {
   if (evtSource) evtSource.close();
   evtSource = new EventSource('/events');
 
-  evtSource.addEventListener('open', () => setConnBadge('live'));
+  evtSource.addEventListener('open', () => {
+    if (!connectionPhase) setConnBadge('connecting');
+  });
+
   evtSource.addEventListener('snapshot', (e) => applyPrices(JSON.parse(e.data)));
   evtSource.addEventListener('prices', (e) => applyPrices(JSON.parse(e.data)));
+
+  evtSource.addEventListener('phase', (e) => {
+    const data = JSON.parse(e.data);
+    connectionPhase = data.phase;
+    setConnBadge(data.phase);
+  });
+
   evtSource.addEventListener('error', () => setConnBadge('disconnected'));
 }
 
 function setConnBadge(state) {
   const el = document.getElementById('connBadge');
   el.classList.remove('conn-live', 'conn-pending', 'conn-disconnected');
-  if (state === 'live') {
-    el.textContent = '🟢 Live';
-    el.classList.add('conn-live');
-  } else if (state === 'disconnected') {
-    el.textContent = '🔴 Disconnected — retrying…';
-    el.classList.add('conn-disconnected');
-  } else {
-    el.textContent = '⚪ Connecting…';
-    el.classList.add('conn-pending');
-  }
+
+  const map = {
+    'connecting':   ['⚪ Connecting…',              'conn-pending'],
+    'regular':      ['🟢 Market Open',              'conn-live'],
+    'pre-market':   ['🟡 Pre-Market',               'conn-live'],
+    'after-hours':  ['🟡 After-Hours',              'conn-live'],
+    'closed':       ['🌙 Market Closed',            'conn-pending'],
+    'disconnected': ['🔴 Disconnected — retrying…', 'conn-disconnected']
+  };
+  const [text, cls] = map[state] || ['⚪ Connecting…', 'conn-pending'];
+  el.textContent = text;
+  el.classList.add(cls);
 }
 
 // --- manual refresh ---
@@ -154,7 +186,7 @@ function renderTable() {
       : '<span class="muted">…</span>';
     return `
       <tr>
-        <td><strong>${h.ticker}</strong></td>
+        <td><a href="ticker.html?symbol=${encodeURIComponent(h.ticker)}" class="ticker-link" title="View details">${h.ticker}</a></td>
         <td>${h.company}</td>
         <td class="num">${fmtQty(h.quantity)}</td>
         <td class="num">${fmtMoney(h.avgCost)}</td>
@@ -205,11 +237,30 @@ function attachSortHandlers() {
 }
 
 // --- bootstrap ---
-document.addEventListener('DOMContentLoaded', async () => {
-  attachSortHandlers();
-  document.getElementById('refreshBtn').addEventListener('click', manualRefresh);
-
+async function bootstrap() {
   await loadPortfolio();
+  await loadInitialPrices();   // 🆕 instant prices from cached prices.json
   renderAll();
   connectSSE();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  attachSortHandlers();
+  document.getElementById('refreshBtn').addEventListener('click', manualRefresh);
+  bootstrap();
+});
+
+// Refresh data when page is restored from BFCache (back/forward navigation)
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) {
+    console.log('🔄 Page restored from cache — refreshing data');
+    bootstrap();
+  }
+});
+
+// Refresh prices when tab becomes visible again
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    loadInitialPrices().then(renderAll);
+  }
 });
