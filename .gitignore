@@ -9,4 +9,4 @@ public/news.json
 # OS / IDE
 .DS_Store
 .vscode/
-*.log
+*.logpublic/portfolio.json
